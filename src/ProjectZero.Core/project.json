@@ -1,0 +1,16 @@
+{
+  "version": "1.0.0-*",
+  "description": "ProjectZero.Core Class Library",
+  "authors": [ "bkulov" ],
+  "tags": [ "" ],
+  "projectUrl": "",
+  "licenseUrl": "",
+  "frameworks": {
+    "dnx451": { },
+    "dnxcore50": { }
+  },
+  "dependencies": {
+    "Microsoft.Dnx.Runtime": "1.0.0-rc1-final",
+    "Newtonsoft.Json": "8.0.3"
+  }
+}
