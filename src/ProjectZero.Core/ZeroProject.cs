@@ -12,7 +12,7 @@ namespace ProjectZero.Core
     {
 		#region Fields
 		private DnxProject _dnxProject;
-		private List<View> _views;
+		private List<ZeroView> _views;
 		private List<Resource> _resources;
 
 		#endregion Fields
@@ -26,7 +26,7 @@ namespace ProjectZero.Core
 			}
 		}
 
-		public IEnumerable<View> Views
+		public IEnumerable<ZeroView> Views
 		{
 			get
 			{
@@ -47,7 +47,7 @@ namespace ProjectZero.Core
 		public ZeroProject()
         {
 			this._resources = new List<Resource>();
-			this._views = new List<View>();
+			this._views = new List<ZeroView>();
         }
 		#endregion Constructors
 
@@ -94,16 +94,16 @@ namespace ProjectZero.Core
 			}
 		}
 
-		public View AddView(string title)
+		public ZeroView AddView(string title)
 		{
-			var view = new View(title);
+			var view = new ZeroView(title);
 
 			this._views.Add(view);
 
 			return view;
 		}
 
-		public void DeleteView(View view, bool deleteResources = false)
+		public void DeleteView(ZeroView view, bool deleteResources = false)
 		{
 			if (!this._views.Contains(view))
 				return;

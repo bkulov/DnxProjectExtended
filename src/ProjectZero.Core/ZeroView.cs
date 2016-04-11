@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace ProjectZero.Core
 {
-	public class View
+	public class ZeroView
     {
 		#region Fields
 
@@ -37,7 +37,7 @@ namespace ProjectZero.Core
 
 		#region Constructors
 
-		public View(string title)
+		public ZeroView(string title)
 		{
 			this._id = new Guid();
 			this.Title = title;
