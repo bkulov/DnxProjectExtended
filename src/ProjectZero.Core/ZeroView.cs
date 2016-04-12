@@ -6,10 +6,12 @@ namespace ProjectZero.Core
 {
 	public class ZeroView
     {
+		// TODO: add some additional metadata if required
+
 		#region Fields
 
-		private Guid _id; // GUID
-		private List<Resource> _resources;
+		private Guid _id;
+		private List<ZeroResource> _resources;
 
 		#endregion Fields
 
@@ -25,7 +27,7 @@ namespace ProjectZero.Core
 
 		public string Title { get; set; }
 
-		public IEnumerable<Resource> Resources
+		public IEnumerable<ZeroResource> Resources
 		{
 			get
 			{
@@ -37,18 +39,22 @@ namespace ProjectZero.Core
 
 		#region Constructors
 
-		public ZeroView(string title)
+		public ZeroView()
 		{
-			this._id = new Guid();
+			this._id = Guid.NewGuid();
+			this._resources = new List<ZeroResource>();
+		}
+
+		public ZeroView(string title) : this()
+		{
 			this.Title = title;
-			this._resources = new List<Resource>();
 		}
 
 		#endregion Constructors
 
 		#region Public Methods
 
-		public void AddResource(Resource resource)
+		public void AddResource(ZeroResource resource)
 		{
 			if (this._resources.Contains(resource))
 				return;
@@ -57,7 +63,7 @@ namespace ProjectZero.Core
 			resource.IncreaseReferenceCounter();
 		}
 
-		public void DeleteResource(Resource resource)
+		public void DeleteResource(ZeroResource resource)
 		{
 			if (!this._resources.Contains(resource))
 				return;

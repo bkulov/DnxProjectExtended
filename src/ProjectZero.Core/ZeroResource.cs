@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace ProjectZero.Core
 {
-	public class Resource
+	public class ZeroResource
 	{
 		#region Fields
 		private int _referenceCounter = 0;
@@ -22,7 +22,7 @@ namespace ProjectZero.Core
 		#endregion Properties
 
 		#region Constructors
-		public Resource(string name, string path, ResourceType type)
+		public ZeroResource(string name, string path, ResourceType type)
 		{
 			this.Name = name;
 			this.Path = path;

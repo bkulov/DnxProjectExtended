@@ -13,7 +13,7 @@ namespace ProjectZero.Core
 		#region Fields
 		private DnxProject _dnxProject;
 		private List<ZeroView> _views;
-		private List<Resource> _resources;
+		private List<ZeroResource> _resources;
 
 		#endregion Fields
 
@@ -34,7 +34,7 @@ namespace ProjectZero.Core
 			}
 		}
 
-		public IEnumerable<Resource> Resources
+		public IEnumerable<ZeroResource> Resources
 		{
 			get
 			{
@@ -46,13 +46,15 @@ namespace ProjectZero.Core
 		#region Constructors
 		public ZeroProject()
         {
-			this._resources = new List<Resource>();
+			this._resources = new List<ZeroResource>();
 			this._views = new List<ZeroView>();
         }
 		#endregion Constructors
 
 		#region Public methods
 
+
+		// TODO: Use a static factory method instead.
 		public bool Load(string projectFolderPath)
 		{
 			// TODO: add validation and error checks
@@ -61,7 +63,7 @@ namespace ProjectZero.Core
 				if (DnxProject.HasProjectFile(projectFolderPath) &&
 					DnxProject.TryGetProject(projectFolderPath, out this._dnxProject))
 				{
-					var prjContent = File.ReadAllText(this._dnxProject.ProjectFilePath);
+					string prjContent = File.ReadAllText(this._dnxProject.ProjectFilePath);
 					//var prj1 = new DnxProject();
 					//JsonConvert.PopulateObject(prjContent, prj1);		// Throws exceptions in SemanticVersion deserialization
 
@@ -78,7 +80,7 @@ namespace ProjectZero.Core
 			return false;
 		}
 
-		public void Save()
+		public void Save(string filePath = null)
 		{
 			if (this._dnxProject == null)
 				return;
@@ -87,6 +89,11 @@ namespace ProjectZero.Core
 			{
 				var serializer = new JsonSerializer();
 				serializer.Formatting = Formatting.Indented;
+
+				using (var writer = File.CreateText(filePath ?? this._dnxProject.ProjectFilePath))
+				{
+					serializer.Serialize(writer, this);
+				}
 			}
 			catch (Exception ex)
 			{
