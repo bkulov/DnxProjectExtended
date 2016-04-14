@@ -17,11 +17,16 @@ namespace ProjectZero.Core
 
 		#region Properties
 
+		// TODO: make the setter private. Currently the deserialization on project.json needs this to be public
 		public Guid Id
 		{
 			get
 			{
 				return this._id;
+			}
+			set
+			{
+				this._id = value;
 			}
 		}
 

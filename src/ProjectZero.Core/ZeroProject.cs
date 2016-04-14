@@ -1,4 +1,6 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -18,6 +20,8 @@ namespace ProjectZero.Core
 		#endregion Fields
 
 		#region Properties
+
+		[JsonIgnore]
 		public DnxProject InternalProject
 		{
 			get
@@ -34,6 +38,8 @@ namespace ProjectZero.Core
 			}
 		}
 
+
+		// TODO: we don't need this because its present in DNX project - sourceFiles, preprocessSourceFiles, resourceFiles, sharedFiles
 		public IEnumerable<ZeroResource> Resources
 		{
 			get
@@ -60,8 +66,7 @@ namespace ProjectZero.Core
 			// TODO: add validation and error checks
 			try
 			{
-				if (DnxProject.HasProjectFile(projectFolderPath) &&
-					DnxProject.TryGetProject(projectFolderPath, out this._dnxProject))
+				if (DnxProject.TryGetProject(projectFolderPath, out this._dnxProject))
 				{
 					string prjContent = File.ReadAllText(this._dnxProject.ProjectFilePath);
 					//var prj1 = new DnxProject();
@@ -89,10 +94,22 @@ namespace ProjectZero.Core
 			{
 				var serializer = new JsonSerializer();
 				serializer.Formatting = Formatting.Indented;
+				serializer.DefaultValueHandling = DefaultValueHandling.Ignore;
+				serializer.NullValueHandling = NullValueHandling.Ignore;
+				serializer.ContractResolver = new CamelCasePropertyNamesContractResolver();
 
-				using (var writer = File.CreateText(filePath ?? this._dnxProject.ProjectFilePath))
+				// TODO: remove .json extension
+				using (var writer = File.CreateText((filePath ?? this._dnxProject.ProjectFilePath) + ".json"))
 				{
+					serializer.Serialize(writer, this.InternalProject);
 					serializer.Serialize(writer, this);
+				}
+
+				using (var wr = new JTokenWriter())
+				{
+					serializer.Serialize(wr, this.InternalProject);
+					serializer.Serialize(wr, this.InternalProject);
+					var aa = ((JObject)(wr.Token)).ToString();
 				}
 			}
 			catch (Exception ex)
