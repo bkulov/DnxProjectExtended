@@ -27,8 +27,7 @@ namespace WebApplication.Services
 			}
 			else
 			{
-				project = new ZeroProject();
-				bool result = project.Load(path);
+				bool result = ZeroProject.TryLoadProject(path, out project);
 				if (result)
 				{
 					this._projectsMap[path] = project;

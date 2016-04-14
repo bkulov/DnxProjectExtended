@@ -15,7 +15,6 @@ namespace ProjectZero.Core
 		#region Fields
 		private DnxProject _dnxProject;
 		private List<ZeroView> _views;
-		private List<ZeroResource> _resources;
 
 		#endregion Fields
 
@@ -38,41 +37,27 @@ namespace ProjectZero.Core
 			}
 		}
 
-
-		// TODO: we don't need this because its present in DNX project - sourceFiles, preprocessSourceFiles, resourceFiles, sharedFiles
-		public IEnumerable<ZeroResource> Resources
-		{
-			get
-			{
-				return this._resources;
-			}
-		}
 		#endregion Properties
 
 		#region Constructors
 		public ZeroProject()
         {
-			this._resources = new List<ZeroResource>();
 			this._views = new List<ZeroView>();
         }
 		#endregion Constructors
 
 		#region Public methods
 
-
-		// TODO: Use a static factory method instead.
-		public bool Load(string projectFolderPath)
+		public static bool TryLoadProject(string projectFolderPath, out ZeroProject project)
 		{
-			// TODO: add validation and error checks
 			try
 			{
-				if (DnxProject.TryGetProject(projectFolderPath, out this._dnxProject))
+				project = new ZeroProject();
+				if (DnxProject.TryGetProject(projectFolderPath, out project._dnxProject))
 				{
-					string prjContent = File.ReadAllText(this._dnxProject.ProjectFilePath);
-					//var prj1 = new DnxProject();
-					//JsonConvert.PopulateObject(prjContent, prj1);		// Throws exceptions in SemanticVersion deserialization
+					string prjContent = File.ReadAllText(project._dnxProject.ProjectFilePath);
 
-					JsonConvert.PopulateObject(prjContent, this);
+					JsonConvert.PopulateObject(prjContent, project);
 
 					return true;
 				}
@@ -82,6 +67,7 @@ namespace ProjectZero.Core
 				// TODO: log exception
 			}
 
+			project = null;
 			return false;
 		}
 
@@ -93,23 +79,23 @@ namespace ProjectZero.Core
 			try
 			{
 				var serializer = new JsonSerializer();
+
+				// set some serializator settings
 				serializer.Formatting = Formatting.Indented;
 				serializer.DefaultValueHandling = DefaultValueHandling.Ignore;
 				serializer.NullValueHandling = NullValueHandling.Ignore;
 				serializer.ContractResolver = new CamelCasePropertyNamesContractResolver();
 
-				// TODO: remove .json extension
-				using (var writer = File.CreateText((filePath ?? this._dnxProject.ProjectFilePath) + ".json"))
-				{
-					serializer.Serialize(writer, this.InternalProject);
-					serializer.Serialize(writer, this);
-				}
+				// serialize both the internal (DNX) project and the additional elements from this object
+				// then merge both JTokens into one to be saved to file
+				JToken prjToken = JToken.FromObject(this.InternalProject, serializer);
+				JToken thisToken = JToken.FromObject(this, serializer);
+				((JContainer)prjToken).Merge(thisToken);
 
-				using (var wr = new JTokenWriter())
+				// save merged object to file
+				using (var writer = File.CreateText((filePath ?? this._dnxProject.ProjectFilePath)))
 				{
-					serializer.Serialize(wr, this.InternalProject);
-					serializer.Serialize(wr, this.InternalProject);
-					var aa = ((JObject)(wr.Token)).ToString();
+					serializer.Serialize(writer, prjToken);
 				}
 			}
 			catch (Exception ex)
@@ -133,27 +119,6 @@ namespace ProjectZero.Core
 				return;
 
 			this._views.Remove(view);
-
-			var viewResources = view.Resources.ToArray();
-
-			// clean view's resources and remove them from the project's resources if no longer in use
-			view.CleanupResources();
-
-			if (deleteResources)
-			{
-				foreach (var resource in viewResources)
-				{
-					if (resource.ReferenceCounter == 0 && this._resources.Contains(resource))
-						this._resources.Remove(resource);
-				}
-			}
-		}
-
-		public void ClearResources()
-		{
-			this._resources.Clear();
-
-			// TODO: check if the resources should be removed from existing views too
 		}
 
 		// TODO: ???

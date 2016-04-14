@@ -65,7 +65,6 @@ namespace ProjectZero.Core
 				return;
 
 			this._resources.Add(resource);
-			resource.IncreaseReferenceCounter();
 		}
 
 		public void DeleteResource(ZeroResource resource)
@@ -74,7 +73,6 @@ namespace ProjectZero.Core
 				return;
 
 			this._resources.Remove(resource);
-			resource.DecreaseReferenceCounter();
 		}
 
 		public void CleanupResources()
