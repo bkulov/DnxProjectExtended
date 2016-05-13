@@ -5,15 +5,18 @@
   "tags": [ "" ],
   "projectUrl": "",
   "licenseUrl": "",
-
   "frameworks": {
     "net451": {
       "dependencies": {
         "Infragistics.Discoverables.Engine": "1.0.0-*",
         "Infragistics.ReportPlus.DashboardModel": "1.0.0-*",
         "Infragistics.ReportPlus.DataLayer.API": "1.0.0-*",
-        "Infragistics.ReportPlus.Providers.Csv": "1.0.0-*"
+        "Infragistics.ReportPlus.Providers.Csv": "1.0.0-*",
+        "Infragistics.ReportPlus.Providers.LocalFile": "1.0.0-*"
       }
     }
+  },
+  "dependencies": {
+    "Newtonsoft.Json": "8.0.3"
   }
 }

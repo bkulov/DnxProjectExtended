@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNet.Mvc;
 using ProjectZero.Core;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using ProjectZero.DataConnectors;
 using WebApplication.Services;
 
 namespace WebApplication.Controllers.Api
@@ -48,6 +45,15 @@ namespace WebApplication.Controllers.Api
 
 			ZeroView view = this._zeroProjectsService.AddViewToProject(path, title);
 			return Json(view);
+		}
+
+		[HttpGet("getjson")]
+		public JsonResult GetAsJson(string path)
+		{
+			var csvDataConnector = new CSVDataConnector();
+			string jsonResult = csvDataConnector.GetData(path);
+
+			return Json(jsonResult);
 		}
 
 		private void EnsureProjectLoaded(string path)

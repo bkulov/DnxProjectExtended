@@ -1,4 +1,5 @@
 ﻿using Infragistics.ReportPlus.DataLayer;
+using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 
 namespace ProjectZero.DataConnectors
@@ -38,5 +39,27 @@ namespace ProjectZero.DataConnectors
 		}
 
 		#endregion Constructors
+
+		#region Methods
+		public string ResultAsJson(IList<ISchemaColumn> schema)
+		{
+			var rows = new JArray();
+
+			foreach (var resultRow in this.ResultRows)
+			{
+				var resultRowData = new JArray(resultRow);
+				var row = new JObject();
+
+				for (int index = 0; index < schema.Count; index++)
+				{
+					row.Add(propertyName: schema[index].ColumnName, value: resultRowData[index]);
+				}
+
+				rows.Add(row);
+			}
+
+			return rows.ToString();
+		}
+		#endregion Methods
 	}
 }
