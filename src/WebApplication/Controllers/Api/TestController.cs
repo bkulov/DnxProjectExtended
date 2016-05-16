@@ -47,11 +47,20 @@ namespace WebApplication.Controllers.Api
 			return Json(view);
 		}
 
-		[HttpGet("getjson")]
-		public JsonResult GetAsJson(string path)
+		[HttpGet("getcsv")]
+		public JsonResult GetCSV(string path)
 		{
 			var csvDataConnector = new CSVDataConnector();
 			string jsonResult = csvDataConnector.GetData(path);
+
+			return Json(jsonResult);
+		}
+
+		[HttpGet("getexcel")]
+		public JsonResult GetExcel(string path, string sheetName)
+		{
+			var excelDataConnector = new ExcelDataConnector();
+			string jsonResult = excelDataConnector.GetData(path, sheetName);
 
 			return Json(jsonResult);
 		}

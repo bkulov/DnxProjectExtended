@@ -12,6 +12,7 @@
         "Infragistics.ReportPlus.DashboardModel": "1.0.0-*",
         "Infragistics.ReportPlus.DataLayer.API": "1.0.0-*",
         "Infragistics.ReportPlus.Providers.Csv": "1.0.0-*",
+        "Infragistics.ReportPlus.Providers.Excel": "1.0.0-*",
         "Infragistics.ReportPlus.Providers.LocalFile": "1.0.0-*"
       }
     }

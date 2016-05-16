@@ -1,11 +1,10 @@
 ﻿namespace ProjectZero.DataConnectors
 {
-	public class DataConnectorBase
+	public abstract class DataConnectorBase
 	{
 		public DataConnectorBase()
 		{
 			Initializer.InitDiscoverables();
 		}
-
 	}
 }
