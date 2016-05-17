@@ -10,8 +10,6 @@ namespace ProjectZero.DataConnectors
 	// To enable this option, right-click on the project and select the Properties menu item. In the Build tab select "Produce outputs on build".
 	public class ExcelDataConnector : LocalFileDataConnectorBase
 	{
-		private const string SheetItemType = "Sheet";	// TODO: bvk - replace this with constant
-
 		public string GetData(string filePath, string sheetName)
 		{
 			try
@@ -22,7 +20,7 @@ namespace ProjectZero.DataConnectors
 
 				// find the desired sheet in item's children array or get the first one if sheet name is empty
 				IList<IMetadataItem> itemChildren = this._metadataLayerService.GetContentMetadata(item);
-				IMetadataItem sheet = itemChildren.FirstOrDefault(c => c.ItemType == SheetItemType && (isSheetNameEmpty || c.DisplayName == sheetName));
+				IMetadataItem sheet = itemChildren.FirstOrDefault(c => c.ItemType == MetadataConstants.SHEET && (isSheetNameEmpty || c.DisplayName == sheetName));
 
 				return this.LoadDataAsJson(sheet);
 			}
