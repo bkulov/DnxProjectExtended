@@ -1,6 +1,7 @@
 ﻿using Infragistics.Discoverables;
 using Infragistics.ReportPlus.DashboardModel;
 using Infragistics.ReportPlus.DataLayer;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -71,11 +72,31 @@ namespace ProjectZero.DataConnectors
 
 		protected string LoadDataAsJson(IMetadataItem item)
 		{
-			if (item == null)
+			return this.LoadDataAsJson(Enumerable.Repeat(item, 1));
+		}
+
+		protected string LoadDataAsJson(IEnumerable<IMetadataItem> items)
+		{
+			if (items == null)
 			{
-				throw new ArgumentNullException("item");
+				throw new ArgumentNullException("items");
 			}
 
+			var resultObject = new JArray();
+
+			foreach (var item in items)
+			{
+				var itemData = this.LoadItemData(item);
+				var itemObject = new JObject();
+				itemObject.Add(propertyName: item.DisplayName, value: itemData);
+				resultObject.Add(itemObject);
+			}
+
+			return resultObject.ToString();
+		}
+
+		private JArray LoadItemData(IMetadataItem item)
+		{
 			// prepare the requirements of the data provider
 			IDataLocation dataLocation = ((IDataSourceItemMetadata)item).DataLocation;
 			IList<ISchemaColumn> schema = this._metadataLayerService.GetSchema(dataLocation);
@@ -95,10 +116,8 @@ namespace ProjectZero.DataConnectors
 			// load data in table
 			this._dataProvider.LoadData(requirements, builder);
 
-			// convert table to json string
-			string result = builder.ResultAsJson(schema);
-
-			return result;
+			// convert table to json object
+			return builder.ResultAsJson(schema);
 		}
 
 		#endregion Methods

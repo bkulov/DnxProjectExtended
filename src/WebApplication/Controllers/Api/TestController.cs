@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNet.Mvc;
 using ProjectZero.Core;
 using ProjectZero.DataConnectors;
+using System;
 using WebApplication.Services;
 
 namespace WebApplication.Controllers.Api
@@ -57,10 +58,12 @@ namespace WebApplication.Controllers.Api
 		}
 
 		[HttpGet("getexcel")]
-		public JsonResult GetExcel(string path, string sheetName)
+		public JsonResult GetExcel(string path, string sheetNames)
 		{
+			string[] sheets = sheetNames?.Split(new [] {","}, StringSplitOptions.RemoveEmptyEntries);
+
 			var excelDataConnector = new ExcelDataConnector();
-			string jsonResult = excelDataConnector.GetData(path, sheetName);
+			string jsonResult = excelDataConnector.GetData(path, sheets);
 
 			return Json(jsonResult);
 		}

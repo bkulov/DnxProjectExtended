@@ -41,7 +41,7 @@ namespace ProjectZero.DataConnectors
 		#endregion Constructors
 
 		#region Methods
-		public string ResultAsJson(IList<ISchemaColumn> schema)
+		public JArray ResultAsJson(IList<ISchemaColumn> schema)
 		{
 			var rows = new JArray();
 
@@ -58,7 +58,7 @@ namespace ProjectZero.DataConnectors
 				rows.Add(row);
 			}
 
-			return rows.ToString();
+			return rows;
 		}
 		#endregion Methods
 	}
